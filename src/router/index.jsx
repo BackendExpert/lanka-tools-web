@@ -36,6 +36,7 @@ import ViewProduct from '../pages/dashbord/products/products/ViewProduct'
 import Categories from '../pages/dashbord/products/category/Categories'
 import CreateCategory from '../pages/dashbord/products/category/CreateCategory'
 import ViewCategory from '../pages/dashbord/products/category/ViewCategory'
+import CreateProduct from '../pages/dashbord/products/products/CreateProduct'
 
 
 function App() {
@@ -83,7 +84,7 @@ function App() {
                     <Route path='website/create-system-files' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><AddNewDocs /></PrivateRoute>}/>
                    
                     <Route path='products' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><Products /></PrivateRoute>}/>
-                    <Route path='product/create' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><Products /></PrivateRoute>}/>
+                    <Route path='product/create' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><CreateProduct /></PrivateRoute>}/>
                     <Route path='product/view/:id' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><ViewProduct /></PrivateRoute>}/>
                     
                     <Route path='categories' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><Categories /></PrivateRoute>}/>

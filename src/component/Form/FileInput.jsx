@@ -5,6 +5,7 @@ const FileInput = ({
     name,
     onChange,
     required = false,
+    multiple = false,
 }) => {
     return (
         <div className="mb-5">
@@ -23,6 +24,7 @@ const FileInput = ({
                 id={name}
                 onChange={onChange}
                 required={required}
+                multiple={multiple}
                 className="
                     w-full h-[50px]
                     rounded border border-gray-200
