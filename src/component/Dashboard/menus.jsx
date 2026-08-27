@@ -27,7 +27,8 @@ import {
     FaGraduationCap,
     FaCreditCard,
     FaRobot,
-    FaTags
+    FaTags,
+    FaTools
 } from "react-icons/fa";
 
 import {
@@ -41,9 +42,11 @@ import {
     MdAdminPanelSettings,
     MdFolder,
     MdFactCheck,
+    MdRateReview
 } from "react-icons/md";
 import { BsDatabaseFillGear } from "react-icons/bs";
 import { FaBuildingFlag, FaBoxesStacked } from "react-icons/fa6";
+
 
 
 export const SuperAdmin = [
@@ -88,8 +91,23 @@ export const SuperAdmin = [
                     },
                 ],
             },
+            {
+                name: "Rental Management",
+                icon: <FaTools />,
+                submenu: [
+                    {
+                        name: "Rent Tools",
+                        link: "/dashboard/rent/tools",
+                    },
+                    {
+                        name: "Late fee",
+                        link: "/dashboard/rent/late-fees",
+                    },
+                ],
+            },
         ],
     },
+
     {
         section: "System",
         items: [
@@ -141,25 +159,7 @@ export const SuperAdmin = [
             },
         ],
     },
-    {
-        section: "Plans",
-        items: [
-            {
-                name: "Plans Management",
-                icon: <MdFactCheck />,
-                submenu: [
-                    {
-                        name: "Plans",
-                        link: "/dashboard/plans",
-                    },
-                    {
-                        name: "Create New  Plan",
-                        link: "/dashboard/Plan/create",
-                    },
-                ],
-            },
-        ],
-    },
+
     {
         section: "Security",
         items: [
@@ -192,26 +192,6 @@ export const BranchAdmin = [
             },
         ],
     },
-    {
-        section: "Plans",
-        items: [
-            {
-                name: "Plans Management",
-                icon: <MdFactCheck />,
-                submenu: [
-                    {
-                        name: "Plans",
-                        link: "/dashboard/plans",
-                    },
-                    {
-                        name: "Create New  Plan",
-                        link: "/dashboard/Plan/create",
-                    },
-                ],
-            },
-        ],
-    },
-
 ];
 
 
@@ -257,6 +237,20 @@ export const Staff = [
                     },
                 ],
             },
+            {
+                name: "Rental Management",
+                icon: <FaTools />,
+                submenu: [
+                    {
+                        name: "Rent Tools",
+                        link: "/dashboard/rent/tools",
+                    },
+                    {
+                        name: "Late fee",
+                        link: "/dashboard/rent/late-fees",
+                    },
+                ],
+            },
         ],
     },
     {
@@ -278,25 +272,6 @@ export const Staff = [
             },
         ],
     },
-    {
-        section: "Plans",
-        items: [
-            {
-                name: "Plans Management",
-                icon: <MdFactCheck />,
-                submenu: [
-                    {
-                        name: "Plans",
-                        link: "/dashboard/plans",
-                    },
-                    {
-                        name: "Create New  Plan",
-                        link: "/dashboard/Plan/create",
-                    },
-                ],
-            },
-        ],
-    },
 ];
 
 
@@ -309,6 +284,33 @@ export const Customer = [
                 name: "Dashboard",
                 link: "/dashboard",
                 icon: <BiSolidDashboard />,
+            },
+        ],
+    },
+    {
+        section: "Products",
+        items: [
+            {
+                name: "Products",
+                icon: <FaTools />,
+                submenu: [
+                    {
+                        name: "Rent Tools",
+                        link: "/dashboard/rentels",
+                    },
+                    {
+                        name: "Rented Tools",
+                        link: "/dashboard/rentel/rented",
+                    },
+                    {
+                        name: "Rented History",
+                        link: "/dashboard/rentel/history",
+                    },
+                    {
+                        name: "Late Fees",
+                        link: "/dashboard/rentel/my-late-fees",
+                    },
+                ],
             },
         ],
     },

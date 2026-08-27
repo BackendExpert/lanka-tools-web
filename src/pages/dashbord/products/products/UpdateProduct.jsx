@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import API from '../../../../services/api'
 import Toast from '../../../../component/Toast/Toast'
 import DefaultButton from '../../../../component/Buttons/DefaultButton'
@@ -9,19 +8,16 @@ import FileInput from '../../../../component/Form/FileInput'
 import Dropdown from '../../../../component/Form/Dropdown'
 import useForm from '../../../../hooks/useForm'
 
-const CreateProduct = () => {
+const UpdateProduct = ({ productID, productdata }) => {
     const token = localStorage.getItem('access_token')
-    const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
-    const [toast, setToast] = useState(false)
+    const [toast, setToast] = useState(null)
     const [categories, setCategories] = useState([])
     const [subCategories, setSubCategories] = useState([])
     const [tag, setTag] = useState('')
-    const [tags, setTags] = useState([])
 
     const { values, handleChange } = useForm({
-        product: '',
         description: '',
         category: '',
         sub_category: [],
@@ -31,8 +27,33 @@ const CreateProduct = () => {
         discount: '',
         stock: '',
         tags: [],
+        product_status: true,
         files: [],
     })
+
+    useEffect(() => {
+        if (!productdata) {
+            return
+        }
+
+        values.description = productdata.description || ''
+        values.category = productdata.category?._id || productdata.category || ''
+        values.sub_category = productdata.sub_category || []
+        values.hourly_price = productdata.hourly_price ?? ''
+        values.daily_price = productdata.daily_price ?? ''
+        values.weekly_price = productdata.weekly_price ?? ''
+        values.discount = productdata.discount ?? ''
+        values.stock = productdata.stock ?? ''
+        values.tags = productdata.tags || []
+        values.product_status = productdata.product_status ?? true
+
+        const categoryId = productdata.category?._id || productdata.category
+        const selectedCategory = categories.find((item) => item._id === categoryId)
+
+        if (selectedCategory?.sub_category) {
+            setSubCategories(selectedCategory.sub_category)
+        }
+    }, [productdata, categories])
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -59,14 +80,13 @@ const CreateProduct = () => {
     const handleCategoryChange = (e) => {
         values.category = e.target.value
         values.sub_category = []
-        setSubCategories([])
 
-        const category = categories.find(
-            (item) => item._id === e.target.value
-        )
+        const category = categories.find((item) => item._id === e.target.value)
 
         if (category?.sub_category) {
             setSubCategories(category.sub_category)
+        } else {
+            setSubCategories([])
         }
     }
 
@@ -77,37 +97,33 @@ const CreateProduct = () => {
     const handleTagAdd = () => {
         const value = tag.trim()
 
-        if (!value || tags.includes(value)) {
+        if (!value || values.tags.includes(value)) {
             return
         }
 
-        const updatedTags = [...tags, value]
-
-        setTags(updatedTags)
-        values.tags = updatedTags
+        values.tags = [...values.tags, value]
         setTag('')
     }
 
     const handleTagRemove = (index) => {
-        const updatedTags = tags.filter(
-            (_, i) => i !== index
-        )
-
-        setTags(updatedTags)
-        values.tags = updatedTags
+        values.tags = values.tags.filter((_, i) => i !== index)
     }
 
     const handleProductImagesChange = (e) => {
         values.files = Array.from(e.target.files || [])
     }
 
-    const handleCreateProduct = async (e) => {
+    const handleStatusChange = (e) => {
+        values.product_status = e.target.value === 'true'
+    }
+
+    const handleUpdateProduct = async (e) => {
         e.preventDefault()
 
-        if (values.files.length < 2) {
+        if (!productID) {
             setToast({
                 success: false,
-                message: 'Please select at least 2 images',
+                message: 'Product ID is missing',
             })
             return
         }
@@ -117,13 +133,13 @@ const CreateProduct = () => {
         try {
             const formData = new FormData()
 
-            formData.append('product', values.product)
             formData.append('description', values.description)
             formData.append('category', values.category)
             formData.append('hourly_price', String(Number(values.hourly_price)))
             formData.append('daily_price', String(Number(values.daily_price)))
             formData.append('weekly_price', String(Number(values.weekly_price)))
             formData.append('stock', String(Number(values.stock)))
+            formData.append('product_status', values.product_status === true ? 'true' : 'false')
 
             if (values.discount !== '') {
                 formData.append('discount', String(Number(values.discount)))
@@ -133,24 +149,20 @@ const CreateProduct = () => {
                 formData.append('sub_category[]', sub)
             })
 
-            values.tags.forEach((tag) => {
-                formData.append('tags[]', tag)
+            values.tags.forEach((item) => {
+                formData.append('tags[]', item)
             })
 
             values.files.forEach((file) => {
                 formData.append('files', file)
             })
 
-            const res = await API.post(
-                '/product/create-product',
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            )
+            const res = await API.patch(`/product/update-product/${productID}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
 
             if (res.data.success === true) {
                 setToast({
@@ -159,15 +171,13 @@ const CreateProduct = () => {
                 })
 
                 setTimeout(() => {
-                    navigate('/dashboard/products')
+                    window.location.reload()
                 }, 3000)
             }
         } catch (err) {
             setToast({
                 success: false,
-                message:
-                    err.response?.data?.message ||
-                    'Something went wrong',
+                message: err.response?.data?.message || 'Something went wrong',
             })
         } finally {
             setLoading(false)
@@ -188,9 +198,8 @@ const CreateProduct = () => {
 
     return (
         <div className="w-full">
-
             {toast && (
-                <div className="fixed top-20 right-8 z-50">
+                <div className="fixed right-8 top-20 z-50">
                     <Toast
                         success={toast.success}
                         message={toast.message}
@@ -200,19 +209,9 @@ const CreateProduct = () => {
             )}
 
             <form
-                onSubmit={handleCreateProduct}
-                className="w-full bg-white border border-gray-200 p-6"
+                onSubmit={handleUpdateProduct}
+                className="w-full border border-gray-200 bg-white p-6"
             >
-
-                <DefaultInput
-                    label="Product"
-                    name="product"
-                    value={values.product}
-                    onChange={handleChange}
-                    placeholder="Enter product name"
-                    required
-                />
-
                 <TextAreaInput
                     label="Product Description"
                     name="description"
@@ -242,35 +241,37 @@ const CreateProduct = () => {
                     />
                 )}
 
-                <DefaultInput
-                    label="Hourly Price"
-                    name="hourly_price"
-                    type="number"
-                    value={values.hourly_price}
-                    onChange={handleChange}
-                    placeholder="Enter hourly price"
-                    required
-                />
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <DefaultInput
+                        label="Hourly Price"
+                        name="hourly_price"
+                        type="number"
+                        value={values.hourly_price}
+                        onChange={handleChange}
+                        placeholder="Enter hourly price"
+                        required
+                    />
 
-                <DefaultInput
-                    label="Daily Price"
-                    name="daily_price"
-                    type="number"
-                    value={values.daily_price}
-                    onChange={handleChange}
-                    placeholder="Enter daily price"
-                    required
-                />
+                    <DefaultInput
+                        label="Daily Price"
+                        name="daily_price"
+                        type="number"
+                        value={values.daily_price}
+                        onChange={handleChange}
+                        placeholder="Enter daily price"
+                        required
+                    />
 
-                <DefaultInput
-                    label="Weekly Price"
-                    name="weekly_price"
-                    type="number"
-                    value={values.weekly_price}
-                    onChange={handleChange}
-                    placeholder="Enter weekly price"
-                    required
-                />
+                    <DefaultInput
+                        label="Weekly Price"
+                        name="weekly_price"
+                        type="number"
+                        value={values.weekly_price}
+                        onChange={handleChange}
+                        placeholder="Enter weekly price"
+                        required
+                    />
+                </div>
 
                 <DefaultInput
                     label="Discount"
@@ -278,7 +279,7 @@ const CreateProduct = () => {
                     type="number"
                     value={values.discount}
                     onChange={handleChange}
-                    placeholder="Enter discount"
+                    placeholder="Enter product discount"
                 />
 
                 <DefaultInput
@@ -291,6 +292,22 @@ const CreateProduct = () => {
                     required
                 />
 
+                <div className="mb-5">
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                        Product Status
+                    </label>
+
+                    <select
+                        name="product_status"
+                        value={String(values.product_status)}
+                        onChange={handleStatusChange}
+                        className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none"
+                    >
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                </div>
+
                 <DefaultInput
                     label="Tag"
                     name="tag"
@@ -299,7 +316,7 @@ const CreateProduct = () => {
                     placeholder="Enter product tag"
                 />
 
-                <div className="flex justify-end mb-5">
+                <div className="mb-5 flex justify-end">
                     <DefaultButton
                         type="button"
                         label="Add Tag"
@@ -308,17 +325,17 @@ const CreateProduct = () => {
                     />
                 </div>
 
-                {tags.length > 0 && (
+                {values.tags.length > 0 && (
                     <div className="mb-6">
-                        <p className="text-xs font-semibold mb-3">
-                            Added Tags
+                        <p className="mb-3 text-xs font-semibold">
+                            Product Tags
                         </p>
 
                         <div className="space-y-2">
-                            {tags.map((item, index) => (
+                            {values.tags.map((item, index) => (
                                 <div
                                     key={`${item}-${index}`}
-                                    className="flex items-center justify-between px-4 py-3 bg-gray-50 border border-gray-200"
+                                    className="flex items-center justify-between border border-gray-200 bg-gray-50 px-4 py-3"
                                 >
                                     <span className="text-sm font-semibold text-gray-800">
                                         {item}
@@ -327,9 +344,7 @@ const CreateProduct = () => {
                                     <DefaultButton
                                         type="button"
                                         label="Remove"
-                                        onClick={() =>
-                                            handleTagRemove(index)
-                                        }
+                                        onClick={() => handleTagRemove(index)}
                                     />
                                 </div>
                             ))}
@@ -342,20 +357,18 @@ const CreateProduct = () => {
                     name="files"
                     onChange={handleProductImagesChange}
                     multiple
-                    required
                 />
 
                 <div className="flex justify-end pt-3">
                     <DefaultButton
                         type="submit"
-                        label={loading ? 'Creating...' : 'Create Product'}
+                        label={loading ? 'Updating...' : 'Update Product'}
                         disabled={loading}
                     />
                 </div>
-
             </form>
         </div>
     )
 }
 
-export default CreateProduct
+export default UpdateProduct

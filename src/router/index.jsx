@@ -37,6 +37,16 @@ import Categories from '../pages/dashbord/products/category/Categories'
 import CreateCategory from '../pages/dashbord/products/category/CreateCategory'
 import ViewCategory from '../pages/dashbord/products/category/ViewCategory'
 import CreateProduct from '../pages/dashbord/products/products/CreateProduct'
+import ViewPublicProduct from '../pages/shop/ViewPublicProduct'
+import RentalProducts from '../pages/dashbord/products/rental/RentalProducts'
+import PaymentProduct from '../pages/dashbord/products/rental/PaymentProduct'
+import RentList from '../pages/dashbord/staff/rent/RentList'
+import RentRecode from '../pages/dashbord/staff/rent/RentRecode'
+import LateFees from '../pages/dashbord/staff/rent/LateFees'
+import LateFee from '../pages/dashbord/staff/rent/LateFee'
+import CurrntRentalTools from '../pages/dashbord/rentalMyData/CurrntRentalTools'
+import RentalHistroy from '../pages/dashbord/rentalMyData/RentalHistroy'
+import MyLateFees from '../pages/dashbord/rentalMyData/MyLateFees'
 
 
 function App() {
@@ -47,6 +57,8 @@ function App() {
                     <Route path='*' element={<DefultError />} />
                     <Route index element={<HomePage />} />
                     <Route path='shop' element={<Shop />} />
+                    <Route path='view-product/:id' element={<ViewPublicProduct />} />
+
                     <Route path='pricing' element={<Pricing />} />
                     <Route path='rent-guide' element={<RentGuide />} />
 
@@ -90,6 +102,20 @@ function App() {
                     <Route path='categories' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><Categories /></PrivateRoute>}/>
                     <Route path='category/create' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><CreateCategory /></PrivateRoute>}/>
                     <Route path='category/view/:id' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><ViewCategory /></PrivateRoute>}/>
+
+
+                    <Route path='rentels' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><RentalProducts /></PrivateRoute>}/>
+                    <Route path='rentels/product/:id' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><PaymentProduct /></PrivateRoute>}/>
+
+                    <Route path='rent/tools' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><RentList /></PrivateRoute>}/>
+                    <Route path='rent/tool/:id' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><RentRecode /></PrivateRoute>}/>
+                    <Route path='rent/late-fees' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><LateFees /></PrivateRoute>}/>
+                    <Route path='rent/late-fee/:id' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff']} ><LateFee /></PrivateRoute>}/>
+
+                    <Route path='rentel/rented' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><CurrntRentalTools /></PrivateRoute>}/>
+                    <Route path='rentel/history' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><RentalHistroy /></PrivateRoute>}/>
+                    <Route path='rentel/my-late-fees' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><MyLateFees /></PrivateRoute>}/>
+
 
 
                </Route>
