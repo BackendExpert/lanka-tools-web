@@ -47,6 +47,7 @@ import LateFee from '../pages/dashbord/staff/rent/LateFee'
 import CurrntRentalTools from '../pages/dashbord/rentalMyData/CurrntRentalTools'
 import RentalHistroy from '../pages/dashbord/rentalMyData/RentalHistroy'
 import MyLateFees from '../pages/dashbord/rentalMyData/MyLateFees'
+import Dashhome from '../pages/dashbord/Dashhome'
 
 
 function App() {
@@ -78,6 +79,8 @@ function App() {
 
                 <Route path='/dashboard/' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><Dashboard /></PrivateRoute>}>
                     <Route path='*' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><DashError /></PrivateRoute>} />
+                    <Route index element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><Dashhome /></PrivateRoute>} />
+                    
                     <Route path='my-profile' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><MyProfile /></PrivateRoute>} />
 
                     <Route path='security/audit-logs' element={<PrivateRoute roles={['super_admin']} ><AuditLogs /></PrivateRoute>} />

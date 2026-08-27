@@ -42,7 +42,8 @@ import {
     MdAdminPanelSettings,
     MdFolder,
     MdFactCheck,
-    MdRateReview
+    MdRateReview,
+    MdOutlineChecklistRtl 
 } from "react-icons/md";
 import { BsDatabaseFillGear } from "react-icons/bs";
 import { FaBuildingFlag, FaBoxesStacked } from "react-icons/fa6";
@@ -272,6 +273,31 @@ export const Staff = [
             },
         ],
     },
+    {
+        section: "personal",
+        items: [
+            {
+                name: "My AuditLog",
+                icon: <FaRobot />,
+                submenu: [
+                    {
+                        name: "My Audits",
+                        link: "/dashboard/personal/auditlogs",
+                    },
+                ],
+            },
+            {
+                name: "AI",
+                icon: <FaRobot />,
+                submenu: [
+                    {
+                        name: "Ask AI",
+                        link: "/dashboard/personal/ask-ai",
+                    },
+                ],
+            },
+        ],
+    },
 ];
 
 
@@ -309,6 +335,31 @@ export const Customer = [
                     {
                         name: "Late Fees",
                         link: "/dashboard/rentel/my-late-fees",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        section: "personal",
+        items: [
+            {
+                name: "My AuditLog",
+                icon: <MdOutlineChecklistRtl  />,
+                submenu: [
+                    {
+                        name: "My Audits",
+                        link: "/dashboard/personal/auditlogs",
+                    },
+                ],
+            },
+            {
+                name: "AI",
+                icon: <FaRobot />,
+                submenu: [
+                    {
+                        name: "Ask AI",
+                        link: "/dashboard/personal/ask-ai",
                     },
                 ],
             },
