@@ -48,6 +48,8 @@ import CurrntRentalTools from '../pages/dashbord/rentalMyData/CurrntRentalTools'
 import RentalHistroy from '../pages/dashbord/rentalMyData/RentalHistroy'
 import MyLateFees from '../pages/dashbord/rentalMyData/MyLateFees'
 import Dashhome from '../pages/dashbord/Dashhome'
+import MyAuditLog from '../pages/dashbord/personal/MyAuditLog'
+import UseAI from '../pages/dashbord/personal/UseAI'
 
 
 function App() {
@@ -82,6 +84,8 @@ function App() {
                     <Route index element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><Dashhome /></PrivateRoute>} />
                     
                     <Route path='my-profile' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><MyProfile /></PrivateRoute>} />
+                    <Route path='personal/auditlogs' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><MyAuditLog /></PrivateRoute>} />
+                    <Route path='personal/ask-ai' element={<PrivateRoute roles={['super_admin', 'branch_admin', 'staff', 'customer']} ><UseAI /></PrivateRoute>} />
 
                     <Route path='security/audit-logs' element={<PrivateRoute roles={['super_admin']} ><AuditLogs /></PrivateRoute>} />
                     <Route path='security/login-history' element={<PrivateRoute roles={['super_admin']} ><LoginHistory /></PrivateRoute>} />

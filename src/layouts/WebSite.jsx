@@ -17,6 +17,7 @@ const WebSite = () => {
             <div className="">
                 <Footer />
             </div>
+            <ChatBot />
         </div>
     )
 }
