@@ -50,12 +50,14 @@ import MyLateFees from '../pages/dashbord/rentalMyData/MyLateFees'
 import Dashhome from '../pages/dashbord/Dashhome'
 import MyAuditLog from '../pages/dashbord/personal/MyAuditLog'
 import UseAI from '../pages/dashbord/personal/UseAI'
+import WireframeApp from '../pages/wireframes/WireframeApp'
 
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
+                <Route path='/wireframes/:page?' element={<WireframeApp />} />
                 <Route path='/' element={<WebSite />} >
                     <Route path='*' element={<DefultError />} />
                     <Route index element={<HomePage />} />
